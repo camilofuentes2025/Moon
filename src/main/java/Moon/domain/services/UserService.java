@@ -29,6 +29,7 @@ public class UserService {
             }
             userPort.saveUser(user);
         }
+        
 
         public void recoverPassword(String email) {
             User user = userPort.findByEmail(email);
@@ -44,11 +45,13 @@ public class UserService {
             // Opcional: podrías enviar esta nueva contraseña por correo al usuario.
             System.out.println("nueva contraseña: " + newPassword); // Solo como referencia.
         }
+        
 
         private String generateTemporaryPassword() {
             
             return "nueva1234"; 
         }
+        
     
         public void changeRole(String email, String role) {
             
@@ -67,11 +70,12 @@ public class UserService {
             System.out.println("Rol actualizado: " + role);
         }
         
+        
         private boolean isValidRole(String role) {
             return List.of("ADMIN", "PROVEEDOR", "CLIENTE").contains(role.toUpperCase());
+        
         }
-
-    }
+ }
 
     
     

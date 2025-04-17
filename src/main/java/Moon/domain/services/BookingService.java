@@ -1,12 +1,9 @@
 package Moon.domain.services;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import Moon.domain.models.Booking;
-import Moon.domain.models.Motel;
 import Moon.domain.models.Room;
 import Moon.domain.models.User;
 import Moon.ports.BookingPort;
@@ -31,7 +28,7 @@ public class BookingService {
     @Autowired
     private UserPort userPort;
     
- // Crear una reserva
+
     public void createBooking(Booking booking, String email, Long roomID) throws Exception {
         User user = userPort.findByEmail(email);
         if (user == null) {
@@ -63,14 +60,16 @@ public class BookingService {
         System.out.println("Reserva creada exitosamente: ID " + booking.getBookingID());
     }
     
+    
     public List<Booking> searchBookingsByBookingID(Long bookingID) throws Exception {
-        List<Booking> bookings = bookingPort.findBookingsByBookingID(bookingID); // Buscar en el puerto.
+        List<Booking> bookings = bookingPort.findBookingsByBookingID(bookingID); 
         if (bookings == null || bookings.isEmpty()) {
             throw new Exception("No se encontraron reservas para el ID proporcionado.");
         }
 
-        return bookings; // Devuelve la lista de reservas.
+        return bookings; 
     }
+    
     
     public void cancelBooking(Long bookingID) throws Exception {
         Booking booking = bookingPort.findByBookingID(bookingID);
