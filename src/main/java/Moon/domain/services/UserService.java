@@ -21,7 +21,7 @@ public class UserService {
     private UserPort userPort;
 
         public void registerUser(User user) throws Exception {
-            if (userPort.existByEmail(user.getEmail())) {
+            if (userPort.existEmail(user.getEmail())) {
                 throw new Exception("correo yo en uso");
             }
             if (user.getAge() < 18) {

@@ -14,13 +14,3 @@ public interface MotelPort {
 
 }
 
-/* 
-
- REPOSITORY:
-
-boolean existsByMotelID(long motelID);
-
-    MotelEntity findByMotelID(long motelID);
-
-    List<MotelEntity> searchMotels(String location);
-*/
