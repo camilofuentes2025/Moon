@@ -8,6 +8,6 @@ public interface RoomRepository extends JpaRepository<RoomEntity, Long>{
 	
 	boolean existByRoomID(long roomID);
 	RoomEntity findByRoomID(long roomID);
-	List<RoomEntity> findRoomsByMotelID(long motelID);
+	List<RoomEntity> findRoomsByMotelName(String motelName);
 
 }

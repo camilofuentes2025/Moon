@@ -70,14 +70,15 @@ public class RoomEntity {
 	public void setCharacteristics(String characteristics) {
 		this.characteristics = characteristics;
 	}
+	
+	public boolean getAvailability() {
+        return availability; // Método para obtener el valor de availability
+    }
 
-	public boolean isAvailability() {
-		return availability;
-	}
+    public void setAvailability(boolean availability) {
+        this.availability = availability; // Método para establecer el valor
+    }
 
-	public void setAvailability(boolean availability) {
-		this.availability = availability;
-	}
 
 	public MotelEntity getMotel() {
 		return motel;

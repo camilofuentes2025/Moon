@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Moon.adapters.motels.repository.MotelRepository;
 import Moon.domain.models.Motel;
 import Moon.domain.models.Room;
 import Moon.domain.models.User;
@@ -28,19 +29,19 @@ public class MotelService {
     private UserPort userPort;
     @Autowired
     private RoomPort roomPort;
+    @Autowired
+    private MotelRepository motelRepository;
 
-    public void createMotel(Motel motel, String email, Room room) throws Exception {
+    public void createMotel(Motel motel, String email) throws Exception {
         User user = userPort.findByEmail(email);
         if (user == null || !user.getRol().equalsIgnoreCase("ADMIN")) {
             throw new Exception("Solo los administradores pueden registrar moteles.");
         }
 
         if (motel == null || motel.getMotelName() == null || motel.getLocation() == null) {
-            throw new Exception("El motel debe tener un nombre y ubicación válidos");
+            throw new Exception("El motel debe tener un nombre y ubicación válidos.");
         }
 
-        room.setAvailability(true);
-        roomPort.saveRoom(room); 
         motelPort.saveMotel(motel); 
         System.out.println("Motel registrado exitosamente: " + motel.getMotelName());
     }
@@ -77,6 +78,12 @@ public class MotelService {
 
         motelPort.saveMotel(existing);
         System.out.println("Motel actualizado: " + existing.getMotelName());
+    }
+    
+    public boolean isValidMotelName(String motelName) {
+        if (motelName == null || motelName.trim().isEmpty()) return false;
+        String normalizedName = motelName.trim().toLowerCase();
+        return motelRepository.existsByMotelName(normalizedName);
     }
 
 }

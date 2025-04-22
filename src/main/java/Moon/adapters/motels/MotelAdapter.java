@@ -26,6 +26,10 @@ public class MotelAdapter implements MotelPort {
     public boolean existMotel(long motelID) {
         return motelRepository.existsByMotelID(motelID);
     }
+    @Override
+    public boolean existsMotelName(String motelName) {
+        return motelRepository.existsByMotelName(motelName); 
+    }
 
     @Override
     public void saveMotel(Motel motel) {
@@ -37,6 +41,12 @@ public class MotelAdapter implements MotelPort {
     @Override
     public Motel findByMotelID(long motelID) {
         MotelEntity motelEntity = motelRepository.findByMotelID(motelID);
+        return motelAdapter(motelEntity);
+    }
+    
+    @Override
+    public Motel findByMotelName(String motelName) {
+        MotelEntity motelEntity = motelRepository.findByMotelName(motelName);
         return motelAdapter(motelEntity);
     }
 

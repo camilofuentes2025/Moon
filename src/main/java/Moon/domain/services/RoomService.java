@@ -3,6 +3,10 @@ package Moon.domain.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import Moon.adapters.motels.repository.MotelRepository;
+import Moon.adapters.rooms.entity.RoomEntity;
+import Moon.adapters.rooms.repository.RoomRepository;
 import Moon.domain.models.Motel;
 import Moon.domain.models.Room;
 import Moon.domain.models.User;
@@ -29,13 +33,20 @@ public class RoomService {
     @Autowired
     private MotelPort motelPort;
     
-    public void createRoom(Long motelID, Room room, String email) throws Exception {
+    @Autowired
+    private RoomRepository roomRepository;
+    
+    @Autowired
+    private MotelRepository motelRepository;
+
+    
+    public void createRoom(String motelName, Room room, String email) throws Exception {
         User user = userPort.findByEmail(email);
         if (user == null || !user.getRol().equalsIgnoreCase("ADMIN")) {
             throw new Exception("Solo los administradores pueden registrar habitaciones.");
         }
         
-        Motel motel = motelPort.findByMotelID(motelID);
+        Motel motel = motelPort.findByMotelName(motelName);
         if (motel == null) {
             throw new Exception("Motel no encontrado.");
         }
@@ -44,22 +55,21 @@ public class RoomService {
             throw new Exception("La habitación debe tener un tipo y un precio válidos.");
         }
         
-        motel.setMotelID(motelID);
+        motel.setMotelName(motelName);
         room.setAvailability(true); 
         roomPort.saveRoom(room);
         System.out.println("Habitación creada exitosamente en el motel: " + motel.getMotelName());
     }
     
 
-    public List<Room> searchRoomsByMotel(Long motelID) throws Exception {
-        Motel motel = motelPort.findByMotelID(motelID);
+    public List<Room> searchRoomsByMotelName(String motelName) throws Exception {
+        Motel motel = motelPort.findByMotelName(motelName);
         if (motel == null) {
             throw new Exception("Motel no encontrado.");
         }
 
-        return roomPort.findRoomsByMotelID(motelID);
+        return roomPort.findRoomsByMotelName(motelName);
     }
-    
     
     public void updateRoom(Long roomID, Room updatedRoom, String email) throws Exception {
         User user = userPort.findByEmail(email);
@@ -80,5 +90,22 @@ public class RoomService {
         roomPort.saveRoom(existingRoom);
         System.out.println("Habitación actualizada exitosamente: ID " + roomID);
     }
+    
+    public boolean isRoomAvailable(long roomID) {
+        RoomEntity room = roomRepository.findByRoomID(roomID); 
+        if (room == null || !room.getAvailability()) { 
+            return false;
+        }
+
+        return true; 
+    }
+    
+    public boolean isValidMotelName(String motelName) {
+        if (motelName == null || motelName.trim().isEmpty()) return false;
+        String normalizedName = motelName.trim().toLowerCase();
+        return motelRepository.existsByMotelName(normalizedName);
+    }
+
+
 
 }

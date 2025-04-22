@@ -8,5 +8,6 @@ public interface RoomPort {
 	boolean existRoom(long roomID);
     void saveRoom(Room room);
     Room findByRoomID(long roomID);
-    List<Room> findRoomsByMotelID(long motelID);
+    List<Room> findRoomsByMotelName(String motelName);
+    
 }

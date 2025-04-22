@@ -32,24 +32,23 @@ public class UserService {
         
 
         public void recoverPassword(String email) {
-            User user = userPort.findByEmail(email);
+            User user = userPort.findByEmail(email); 
             if (user == null) {
-                throw new IllegalArgumentException("correo inexistente");
+                throw new IllegalArgumentException("Correo inexistente");
             }
-            
-            String newPassword = generateTemporaryPassword();
 
-            user.setPassword(newPassword);
+            String newPassword = generateTemporaryPassword(); 
+            user.setPassword(newPassword); 
+
             userPort.saveUser(user);
 
-            // Opcional: podrías enviar esta nueva contraseña por correo al usuario.
-            System.out.println("nueva contraseña: " + newPassword); // Solo como referencia.
+            
+            System.out.println("Tu nueva contraseña temporal es: " + newPassword);
         }
-        
 
         private String generateTemporaryPassword() {
             
-            return "nueva1234"; 
+            return "temp" + (int) (Math.random() * 10000); 
         }
         
     

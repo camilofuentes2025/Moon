@@ -43,12 +43,13 @@ public class RoomAdapter implements RoomPort {
     }
 
     @Override
-    public List<Room> findRoomsByMotelID(long motelID) {
-        List<RoomEntity> roomEntities = roomRepository.findRoomsByMotelID(motelID);
-        return roomEntities.stream()
+    public List<Room> findRoomsByMotelName(String motelName) {
+        List<RoomEntity> roomEntity = roomRepository.findRoomsByMotelName(motelName);
+        return roomEntity.stream()
                 .map(this::roomAdapter)
                 .collect(Collectors.toList());
     }
+    
 
     private Room roomAdapter(RoomEntity roomEntity) {
         if (roomEntity == null) {
@@ -60,7 +61,7 @@ public class RoomAdapter implements RoomPort {
         room.setType(roomEntity.getType());
         room.setPrice(roomEntity.getPrice());
         room.setCharacteristics(roomEntity.getCharacteristics());
-        room.setAvailability(roomEntity.isAvailability());
+        room.setAvailability(roomEntity.getAvailability());
         room.setMotel(motelAdapter(roomEntity.getMotel())); // Relación con el Motel.
         return room;
     }
