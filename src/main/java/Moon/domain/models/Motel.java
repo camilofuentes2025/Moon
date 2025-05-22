@@ -6,7 +6,6 @@ public class Motel {
     private String motelName;
     private String location;
     private long motelPhone;
-    private boolean availability;
     
 	public long getMotelID() {
 		return motelID;
@@ -32,13 +31,5 @@ public class Motel {
 	public void setMotelPhone(long motelPhone) {
 		this.motelPhone = motelPhone;
 	}
-	public boolean isAvailability() {
-		return availability;
-	}
-	public void setAvailability(boolean availability) {
-		this.availability = availability;
-	}
-    
-    
 
 }

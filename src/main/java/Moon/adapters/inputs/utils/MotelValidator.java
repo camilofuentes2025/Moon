@@ -23,8 +23,8 @@ public class MotelValidator extends SimpleValidator {
 
     public long motelPhoneValidator(String value) throws Exception {
         long phone = longValidator(value, "Teléfono del motel");
-        if (String.valueOf(phone).length() != 7) {
-            throw new Exception("El teléfono del motel debe tener exactamente 7 dígitos.");
+        if (String.valueOf(phone).length() != 10) {
+            throw new Exception("El teléfono del motel debe tener exactamente 10 dígitos.");
         }
         return phone;
     }

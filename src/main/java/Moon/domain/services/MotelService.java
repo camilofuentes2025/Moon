@@ -47,16 +47,11 @@ public class MotelService {
     }
     
 
-    public List<Motel> searchMotels(String location, Date checkIn, Date checkOut) throws Exception {
-        if (location == null || checkIn == null || checkOut == null) {
-            throw new Exception("Filtros incompletos");
+    public Motel findMotelByName(String motelName) throws Exception {
+        if (motelName == null || motelName.trim().isEmpty()) {
+            throw new Exception("El nombre del motel no puede estar vacío.");
         }
-
-        if (checkIn.after(checkOut)) {
-            throw new Exception("Fechas inválidas");
-        }
-
-        return motelPort.searchMotels(location, checkIn, checkOut);
+        return motelPort.findByMotelName(motelName);
     }
     
  
@@ -74,7 +69,7 @@ public class MotelService {
         existing.setMotelName(updatedMotel.getMotelName());
         existing.setLocation(updatedMotel.getLocation());
         existing.setMotelPhone(updatedMotel.getMotelPhone());
-        existing.setAvailability(updatedMotel.isAvailability());
+        
 
         motelPort.saveMotel(existing);
         System.out.println("Motel actualizado: " + existing.getMotelName());

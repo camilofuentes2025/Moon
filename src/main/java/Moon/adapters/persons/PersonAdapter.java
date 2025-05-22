@@ -24,10 +24,17 @@ public class PersonAdapter implements PersonPort {
 
 	@Override
 	public void savePerson(Person person) {
-		PersonEntity personEntity = personAdapter(person);
-		personRepository.save(personEntity);
-		person.setDocument(personEntity.getDocument());
+	    System.out.println("Verificando si el documento existe en BD: " + person.getDocument()); // 🔍 Depuración
+	    if (existPerson(person.getDocument())) {
+	        throw new RuntimeException("El documento " + person.getDocument() + " ya está registrado.");
+	    }
+
+	    PersonEntity personEntity = personAdapter(person);
+	    personRepository.save(personEntity);
+	    person.setDocument(personEntity.getDocument());
 	}
+
+
 
 	@Override
 	public Person findByDocument(long document) {

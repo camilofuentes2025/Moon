@@ -1,5 +1,7 @@
 package Moon.domain.models;
 
+import java.sql.Date;
+
 public class Room {
 	
     private long roomID;
@@ -45,6 +47,7 @@ public class Room {
 	public void setMotel(Motel motel) {
 		this.motel = motel;
 	}
+
     
     
 

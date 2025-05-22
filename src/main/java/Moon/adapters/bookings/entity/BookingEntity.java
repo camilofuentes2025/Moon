@@ -5,8 +5,11 @@ import Moon.adapters.persons.entity.PersonEntity;
 import Moon.adapters.rooms.entity.RoomEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,14 +25,15 @@ import lombok.Setter;
 public class BookingEntity {
 	
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bookingID")
     private long bookingID; 
     
-    @Column(name = "startTime") 
-    private Date startTime;
+    @Column(name = "checkIn") 
+    private Date checkIn;
     
-    @Column(name = "endTime") 
-    private Date endTime;
+    @Column(name = "checkOut") 
+    private Date checkOut;
 
     @Column(name = "status")
     private boolean status;
@@ -41,7 +45,7 @@ public class BookingEntity {
     @JoinColumn(name = "room")
     private RoomEntity room;
     
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user")
     private PersonEntity user;
 
@@ -53,20 +57,22 @@ public class BookingEntity {
 		this.bookingID = bookingID;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	
+
+	public Date getCheckIn() {
+		return checkIn;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setCheckIn(Date checkIn) {
+		this.checkIn = checkIn;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public Date getCheckOut() {
+		return checkOut;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setCheckOut(Date checkOut) {
+		this.checkOut = checkOut;
 	}
 
 	public boolean isStatus() {

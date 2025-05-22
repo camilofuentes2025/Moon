@@ -2,8 +2,11 @@ package Moon.adapters.motels;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import Moon.adapters.bookings.entity.BookingEntity;
 import Moon.adapters.motels.entity.MotelEntity;
 import Moon.adapters.motels.repository.MotelRepository;
+import Moon.domain.models.Booking;
 import Moon.domain.models.Motel;
 import Moon.ports.MotelPort;
 import lombok.Getter;
@@ -47,16 +50,28 @@ public class MotelAdapter implements MotelPort {
     @Override
     public Motel findByMotelName(String motelName) {
         MotelEntity motelEntity = motelRepository.findByMotelName(motelName);
+
+        if (motelEntity == null) {
+            throw new RuntimeException("No se encontró ningún motel con el nombre: " + motelName);
+        }
+
         return motelAdapter(motelEntity);
     }
 
     @Override
-    public List<Motel> searchMotels(String location, Date checkIn, Date checkOut) {
-        List<MotelEntity> motelEntity = motelRepository.findByLocationAndAvailability(location, checkIn, checkOut);
-        return motelEntity.stream()
+    public List<Motel> findAllByMotelName(String motelName) {
+        List<MotelEntity> motelEntities = motelRepository.findAllByMotelName(motelName);
+
+        if (motelEntities == null || motelEntities.isEmpty()) {
+            throw new RuntimeException("No se encontraron moteles con el nombre: " + motelName);
+        }
+
+        return motelEntities.stream()
                 .map(this::motelAdapter)
                 .collect(Collectors.toList());
     }
+    
+   
 
     private Motel motelAdapter(MotelEntity motelEntity) {
         if (motelEntity == null) {
@@ -67,7 +82,7 @@ public class MotelAdapter implements MotelPort {
         motel.setMotelName(motelEntity.getMotelName());
         motel.setLocation(motelEntity.getLocation());
         motel.setMotelPhone(motelEntity.getMotelPhone());
-        motel.setAvailability(motelEntity.isAvailability());
+       
         return motel;
     }
 
@@ -80,7 +95,7 @@ public class MotelAdapter implements MotelPort {
         motelEntity.setMotelName(motel.getMotelName());
         motelEntity.setLocation(motel.getLocation());
         motelEntity.setMotelPhone(motel.getMotelPhone());
-        motelEntity.setAvailability(motel.isAvailability());
+      
         return motelEntity;
     }
 }

@@ -1,8 +1,14 @@
 package Moon.adapters.motels.entity;
 
+import java.util.List;
+
+import Moon.adapters.rooms.entity.RoomEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +23,7 @@ import lombok.Setter;
 public class MotelEntity {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "motelID")
     private long motelID;
     
@@ -29,8 +36,8 @@ public class MotelEntity {
     @Column(name = "motelPhone")
     private long motelPhone;
     
-    @Column(name = "availability")
-    private boolean availability;
+    @OneToMany(mappedBy = "motel")
+    private List<RoomEntity> rooms;
 
 	public long getMotelID() {
 		return motelID;
@@ -64,13 +71,15 @@ public class MotelEntity {
 		this.motelPhone = motelPhone;
 	}
 
-	public boolean isAvailability() {
-		return availability;
+	public List<RoomEntity> getRooms() {
+		return rooms;
 	}
 
-	public void setAvailability(boolean availability) {
-		this.availability = availability;
+	public void setRooms(List<RoomEntity> rooms) {
+		this.rooms = rooms;
 	}
+
+
 	
 	
  

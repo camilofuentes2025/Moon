@@ -1,8 +1,12 @@
 package Moon.adapters.users.entity;
 
 import Moon.adapters.persons.entity.PersonEntity;
+import Moon.domain.models.Person;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -19,10 +23,11 @@ import lombok.Setter;
 public class UserEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.MERGE) // Evita la doble inserción
     @JoinColumn(name = "document")
     private PersonEntity person; 
 

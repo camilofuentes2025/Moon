@@ -1,7 +1,6 @@
 package Moon.domain.services;
 
 import Moon.domain.models.User;
-import Moon.ports.PersonPort;
 import Moon.ports.UserPort;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,67 +14,60 @@ import lombok.Setter;
 @NoArgsConstructor
 @Service
 public class UserService {
-	@Autowired
-    private PersonPort personPort;
+
     @Autowired
     private UserPort userPort;
 
-        public void registerUser(User user) throws Exception {
-            if (userPort.existEmail(user.getEmail())) {
-                throw new Exception("correo yo en uso");
-            }
-            if (user.getAge() < 18) {
-                throw new Exception("debes ser mayor de edad");
-            }
-            userPort.saveUser(user);
-        }
-        
-
-        public void recoverPassword(String email) {
-            User user = userPort.findByEmail(email); 
-            if (user == null) {
-                throw new IllegalArgumentException("Correo inexistente");
-            }
-
-            String newPassword = generateTemporaryPassword(); 
-            user.setPassword(newPassword); 
-
-            userPort.saveUser(user);
-
-            
-            System.out.println("Tu nueva contraseña temporal es: " + newPassword);
+    public void registerUser(User user) throws Exception {
+        if (userPort.findByEmail(user.getEmail()) != null) {
+            throw new Exception("❌ Error: Este correo ya está registrado.");
         }
 
-        private String generateTemporaryPassword() {
-            
-            return "temp" + (int) (Math.random() * 10000); 
+        if (user.getAge() < 18) {
+            throw new Exception("❌ Error: Debes ser mayor de edad para registrarte.");
+        }
+
+        userPort.saveUser(user);
+        System.out.println("✅ Usuario registrado exitosamente.");
+    }
+
+    public void recoverPassword(String email) {
+        User user = userPort.findByEmail(email);
+        
+        if (user == null) {
+            System.out.println("❌ No se encontró ningún usuario con ese correo.");
+            return;
         }
         
-    
-        public void changeRole(String email, String role) {
-            
-            if (!isValidRole(role)) {
-                throw new IllegalArgumentException("Rol inválido. Los roles permitidos son: ADMIN, PROVEEDOR, CLIENTE.");
-            }
+        String newPassword = generateTemporaryPassword();
+        
+        // 🔥 CAMBIO: Usar método específico para actualizar contraseña
+        userPort.updatePassword(email, newPassword);
+        
+        System.out.println("✅ Tu nueva contraseña temporal es: " + newPassword);
+    }
 
-            User user = userPort.findByEmail(email);
-            if (user == null) {
-                throw new IllegalArgumentException("Correo inexistente");
-            }
+    private String generateTemporaryPassword() {
+        return "temp" + (int) (Math.random() * 10000);
+    }
 
-            user.setRol(role);
-            userPort.saveUser(user);
-
-            System.out.println("Rol actualizado: " + role);
+   /* public void changeRole(String email, String role) {
+        if (!isValidRole(role)) {
+            throw new IllegalArgumentException("❌ Error: Rol inválido. Solo se permiten ADMIN o CLIENTE.");
         }
-        
-        
-        private boolean isValidRole(String role) {
-            return List.of("ADMIN", "PROVEEDOR", "CLIENTE").contains(role.toUpperCase());
-        
-        }
- }
 
-    
-    
-    
+        User user = userPort.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("❌ Error: No se encontró ningún usuario con ese correo.");
+        }
+
+        user.setRol(role);
+        userPort.saveUser(user);
+
+        System.out.println("✅ Rol actualizado exitosamente a: " + role);
+    }
+
+    private boolean isValidRole(String role) {
+        return List.of("ADMIN", "CLIENTE").contains(role.toUpperCase());
+    }*/
+}

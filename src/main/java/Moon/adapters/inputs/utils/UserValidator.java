@@ -38,10 +38,8 @@ public class UserValidator extends PersonValidator {
 
     public String rolValidator(String value) throws Exception {
         value = stringValidator(value, "Rol");
-        if (!value.equalsIgnoreCase("ADMIN") &&
-            !value.equalsIgnoreCase("CLIENTE") &&
-            !value.equalsIgnoreCase("PROVEEDOR")) {
-            throw new Exception("El rol debe ser uno de los siguientes: ADMIN, CLIENTE, PROVEEDOR.");
+        if (!value.equalsIgnoreCase("ADMIN") && !value.equalsIgnoreCase("CLIENTE")) {
+            throw new Exception("El rol debe ser CLIENTE o ADMIN.");
         }
         return value.trim().toUpperCase();
     }

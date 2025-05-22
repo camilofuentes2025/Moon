@@ -5,8 +5,8 @@ import java.sql.Date;
 public class Booking {
 	
 	private long bookingID;
-	private Date startTime;
-	private Date endTime;
+	private Date checkIn;
+	private Date checkOut;
 	private boolean status;
 	private boolean payment;
 	private Room room;
@@ -18,17 +18,19 @@ public class Booking {
 	public void setBookingID(long bookingID) {
 		this.bookingID = bookingID;
 	}
-	public Date getStartTime() {
-		return startTime;
+	
+	
+	public Date getCheckIn() {
+		return checkIn;
 	}
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setCheckIn(Date checkIn) {
+		this.checkIn = checkIn;
 	}
-	public Date getEndTime() {
-		return endTime;
+	public Date getCheckOut() {
+		return checkOut;
 	}
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setCheckOut(Date checkOut) {
+		this.checkOut = checkOut;
 	}
 	public boolean isStatus() {
 		return status;

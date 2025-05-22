@@ -11,7 +11,7 @@ public interface MotelPort {
 	boolean existsMotelName(String motelName);
     void saveMotel(Motel motel);
     Motel findByMotelID(long motelID);
-    List<Motel> searchMotels(String location, Date checkIn, Date checkOut);
+    List<Motel> findAllByMotelName(String motelName);
     Motel findByMotelName(String motelName);
 }
 

@@ -1,42 +1,39 @@
 package Moon.adapters.rooms.entity;
 
 import Moon.adapters.motels.entity.MotelEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.sql.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "room")
-
 public class RoomEntity {
-	
-	@Id
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "roomID")
     private long roomID;
-    
+
     @Column(name = "type")
     private String type;
-    
+
     @Column(name = "price")
     private long price;
-    
+
     @Column(name = "characteristics")
     private String characteristics;
-    
+
     @Column(name = "availability")
     private boolean availability;
 
-    @OneToOne
-    @JoinColumn(name = "motel")
+    @ManyToOne
+    @JoinColumn(name = "motel_id")
     private MotelEntity motel;
 
 	public long getRoomID() {
@@ -70,14 +67,14 @@ public class RoomEntity {
 	public void setCharacteristics(String characteristics) {
 		this.characteristics = characteristics;
 	}
-	
-	public boolean getAvailability() {
-        return availability; // Método para obtener el valor de availability
-    }
 
-    public void setAvailability(boolean availability) {
-        this.availability = availability; // Método para establecer el valor
-    }
+	public boolean isAvailability() {
+		return availability;
+	}
+
+	public void setAvailability(boolean availability) {
+		this.availability = availability;
+	}
 
 
 	public MotelEntity getMotel() {
@@ -87,5 +84,9 @@ public class RoomEntity {
 	public void setMotel(MotelEntity motel) {
 		this.motel = motel;
 	}
-       
+
+    
+
+
+
 }

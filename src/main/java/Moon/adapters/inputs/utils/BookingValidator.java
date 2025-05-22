@@ -13,25 +13,26 @@ import java.util.Date;
 @Component
 public class BookingValidator extends SimpleValidator {
 
-    public Date startTimeValidator(Date startTime) throws Exception {
-        if (startTime == null) {
+    public Date startTimeValidator(Date checkIn) throws Exception {
+        if (checkIn == null) {
             throw new Exception("La fecha de inicio de la reserva es requerida.");
         }
         Date currentDate = new Date();
-        if (startTime.before(currentDate)) {
+        if (checkIn.before(currentDate)) {
             throw new Exception("La fecha de inicio de la reserva no puede ser anterior a la fecha actual.");
         }
-        return startTime;
+        return checkIn;
     }
+    
 
-    public Date endTimeValidator(Date startTime, Date endTime) throws Exception {
-        if (endTime == null) {
+    public Date endTimeValidator(Date checkIn, Date checkOut) throws Exception {
+        if (checkOut == null) {
             throw new Exception("La fecha de fin de la reserva es requerida.");
         }
-        if (endTime.before(startTime)) {
+        if (checkOut.before(checkIn)) {
             throw new Exception("La fecha de fin de la reserva no puede ser anterior a la fecha de inicio.");
         }
-        return endTime;
+        return checkOut;
     }
     
     @Autowired
@@ -49,7 +50,6 @@ public class BookingValidator extends SimpleValidator {
         return room;
     }
     
-    @Autowired
     public Person userValidator(Person user) throws Exception {
         if (user == null) {
             throw new Exception("La reserva debe estar asociada a un usuario válido.");

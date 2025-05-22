@@ -1,5 +1,6 @@
 package Moon.domain.services;
 
+import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class RoomService {
         if (user == null || !user.getRol().equalsIgnoreCase("ADMIN")) {
             throw new Exception("Solo los administradores pueden registrar habitaciones.");
         }
-        
+
         Motel motel = motelPort.findByMotelName(motelName);
         if (motel == null) {
             throw new Exception("Motel no encontrado.");
@@ -54,12 +55,14 @@ public class RoomService {
         if (room == null || room.getType() == null || room.getPrice() <= 0) {
             throw new Exception("La habitación debe tener un tipo y un precio válidos.");
         }
-        
-        motel.setMotelName(motelName);
-        room.setAvailability(true); 
+
+        room.setMotel(motel); // 📌 Ahora asignamos correctamente el motel a la habitación
+        room.setAvailability(true);
         roomPort.saveRoom(room);
-        System.out.println("Habitación creada exitosamente en el motel: " + motel.getMotelName());
+
+        System.out.println("✅ Habitación creada exitosamente en el motel: " + motel.getMotelName());
     }
+
     
 
     public List<Room> searchRoomsByMotelName(String motelName) throws Exception {
@@ -68,7 +71,7 @@ public class RoomService {
             throw new Exception("Motel no encontrado.");
         }
 
-        return roomPort.findRoomsByMotelName(motelName);
+        return roomPort.findByMotelName(motelName);
     }
     
     public void updateRoom(Long roomID, Room updatedRoom, String email) throws Exception {
@@ -93,7 +96,7 @@ public class RoomService {
     
     public boolean isRoomAvailable(long roomID) {
         RoomEntity room = roomRepository.findByRoomID(roomID); 
-        if (room == null || !room.getAvailability()) { 
+        if (room == null || !room.isAvailability()) { 
             return false;
         }
 

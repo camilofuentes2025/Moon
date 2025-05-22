@@ -20,11 +20,16 @@ public class LoginService {
     public User login(User user) throws Exception {
         User userValidate = userPort.findByEmail(user.getEmail());
         if (userValidate == null) {
-            throw new Exception("correo  incorrecto.");
+            throw new Exception("Correo incorrecto.");
         }
-        if(!user.getPassword().equals(userValidate.getPassword())){
-            throw new Exception("contraseña invalido");
+        if (!user.getPassword().equals(userValidate.getPassword())) {
+            throw new Exception("Contraseña inválida.");
         }
         return userValidate;
-    }   
+    }
+
+    public boolean logout() {
+        System.out.println("Logout procesado.");
+        return true;
+    }
 }

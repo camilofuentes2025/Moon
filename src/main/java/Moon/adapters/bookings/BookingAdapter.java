@@ -6,9 +6,11 @@ import Moon.adapters.bookings.entity.BookingEntity;
 import Moon.adapters.bookings.repository.BookingRepository;
 import Moon.adapters.persons.entity.PersonEntity;
 import Moon.adapters.rooms.entity.RoomEntity;
+import Moon.adapters.users.entity.UserEntity;
 import Moon.domain.models.Booking;
 import Moon.domain.models.Person;
 import Moon.domain.models.Room;
+import Moon.domain.models.User;
 import Moon.ports.BookingPort;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,7 @@ public class BookingAdapter implements BookingPort {
 
     @Override
     public boolean existBooking(long bookingID) {
-        return bookingRepository.existByBookingID(bookingID);
+        return bookingRepository.existsByBookingID(bookingID);
     }
 
     @Override
@@ -45,11 +47,50 @@ public class BookingAdapter implements BookingPort {
     }
 
     @Override
-    public List<Booking> findBookingsByBookingID(Long userID) {
-        List<BookingEntity> bookingEntities = bookingRepository.findBookingsByBookingID(userID);
+    public List<Booking> findAllByBookingID(Long bookingID) {
+        // Buscar todas las reservas con el ID proporcionado
+        List<BookingEntity> bookingEntities = bookingRepository.findAllByBookingID(bookingID);
+
+        if (bookingEntities == null || bookingEntities.isEmpty()) {
+            throw new RuntimeException("No se encontraron reservas con el ID: " + bookingID);
+        }
+
+        // Convertir las entidades a modelos
         return bookingEntities.stream()
                 .map(this::bookingAdapter)
                 .collect(Collectors.toList());
+    }
+    
+    private User userAdapter(UserEntity userEntity) {
+        if (userEntity == null) {
+            return null;
+        }
+        User user = new User();
+        user.setDocument(userEntity.getPerson().getDocument()); 
+        user.setName(userEntity.getPerson().getName());
+        user.setPhone(userEntity.getPerson().getPhone());
+        user.setAge(userEntity.getPerson().getAge());
+        user.setEmail(userEntity.getEmail());
+        user.setPassword(userEntity.getPassword());
+        user.setRol(userEntity.getRol());
+        return user;
+    }
+
+    private UserEntity userAdapter(User user) {
+    	if (user == null) {
+            return null;
+		}
+        UserEntity userEntity = new UserEntity();
+        PersonEntity personEntity = new PersonEntity();
+        personEntity.setDocument(user.getDocument());
+        personEntity.setName(user.getName());
+        personEntity.setPhone(user.getPhone());
+        personEntity.setAge(user.getAge());
+        userEntity.setPerson(personEntity); 
+        userEntity.setEmail(user.getEmail());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setRol(user.getRol());
+        return userEntity;
     }
 
     private Booking bookingAdapter(BookingEntity bookingEntity) {
@@ -59,12 +100,13 @@ public class BookingAdapter implements BookingPort {
 
         Booking booking = new Booking();
         booking.setBookingID(bookingEntity.getBookingID());
-        booking.setStartTime(bookingEntity.getStartTime());
-        booking.setEndTime(bookingEntity.getEndTime());
+        booking.setCheckIn(bookingEntity.getCheckIn()); // 📌 Cambio de startTime a checkIn
+        booking.setCheckOut(bookingEntity.getCheckOut()); // 📌 Cambio de endTime a checkOut
         booking.setStatus(bookingEntity.isStatus());
         booking.setPayment(bookingEntity.isPayment());
-        booking.setRoom(roomAdapter(bookingEntity.getRoom())); // Relación con Room.
-        booking.setUser(personAdapter(bookingEntity.getUser())); // Relación con Person.
+        booking.setRoom(roomAdapter(bookingEntity.getRoom())); 
+        booking.setUser(personAdapter(bookingEntity.getUser())); 
+
         return booking;
     }
 
@@ -75,8 +117,8 @@ public class BookingAdapter implements BookingPort {
 
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setBookingID(booking.getBookingID());
-        bookingEntity.setStartTime(booking.getStartTime());
-        bookingEntity.setEndTime(booking.getEndTime());
+        bookingEntity.setCheckIn(booking.getCheckIn());
+        bookingEntity.setCheckOut(booking.getCheckOut());
         bookingEntity.setStatus(booking.isStatus());
         bookingEntity.setPayment(booking.isPayment());
         bookingEntity.setRoom(roomAdapter(booking.getRoom())); // Relación con Room.

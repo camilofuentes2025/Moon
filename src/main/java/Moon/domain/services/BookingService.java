@@ -3,6 +3,8 @@ package Moon.domain.services;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import Moon.adapters.inputs.utils.RoomValidator;
 import Moon.domain.models.Booking;
 import Moon.domain.models.Room;
 import Moon.domain.models.User;
@@ -29,47 +31,41 @@ public class BookingService {
     private UserPort userPort;
     
 
-    public void createBooking(Booking booking, String email, Long roomID) throws Exception {
+    public void createBooking(Booking booking, String email, String motelName, String roomType) throws Exception {
         User user = userPort.findByEmail(email);
         if (user == null) {
             throw new Exception("Usuario no encontrado.");
         }
 
-        Room room = roomPort.findByRoomID(roomID);
+        // 📌 Validar tipo de habitación
+        roomType = new RoomValidator().typeValidator(roomType);
+
+        Room room = roomPort.findAvailableRoomByTypeAndMotelName(roomType, motelName); 
         if (room == null) {
-            throw new Exception("Habitación no encontrada.");
+            throw new Exception("No hay habitaciones disponibles de tipo '" + roomType + "' en " + motelName);
         }
 
-        if (!room.isAvailability()) {
-            throw new Exception("La habitación no está disponible.");
-        }
-
-        if (booking.getStartTime().after(booking.getEndTime())) {
+        if (booking.getCheckIn().after(booking.getCheckOut())) { // 📌 Cambio de startTime a checkIn
             throw new Exception("Fechas inválidas.");
         }
 
         booking.setRoom(room);
         booking.setUser(user);
-        booking.setStatus(true); 
-        //booking.setPayment(false); // opcional, pago pendiente
-
-        room.setAvailability(false);
-        roomPort.saveRoom(room);
+        booking.setStatus(true);
 
         bookingPort.saveBooking(booking);
-        System.out.println("Reserva creada exitosamente: ID " + booking.getBookingID());
+        System.out.println("✅ Reserva creada exitosamente en " + motelName + " con ID " + booking.getBookingID());
     }
     
     
     public List<Booking> searchBookingsByBookingID(Long bookingID) throws Exception {
-        List<Booking> bookings = bookingPort.findBookingsByBookingID(bookingID); 
-        if (bookings == null || bookings.isEmpty()) {
+        List<Booking> booking = bookingPort.findAllByBookingID(bookingID); 
+        if (booking == null || booking.isEmpty()) {
             throw new Exception("No se encontraron reservas para el ID proporcionado.");
         }
 
-        return bookings; 
+        return booking; 
     }
-    
     
     public void cancelBooking(Long bookingID) throws Exception {
         Booking booking = bookingPort.findByBookingID(bookingID);
